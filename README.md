@@ -14,3 +14,8 @@ Prerequisites:
 
 To test the API layer, run `make test` from the root project directory 
 to install composer dependencies & execute the test suite.
+
+## Security
+
+Normally the contents of the [env](./env) directory would not be checked in, 
+but for the sake of exercise correctness they are included.
