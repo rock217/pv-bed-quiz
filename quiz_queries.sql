@@ -1,5 +1,6 @@
 -- 1. Write a query to return the full name, id, position, total goals, and signed date for all active
 -- players on the team 'dallas penguins'.
+
 select
     concat(p.first_name, ' ', p.last_name) as full_name,
     p.player_id,
@@ -20,6 +21,7 @@ group by p.player_id;
 
 -- The author assumes this query is looking for the most recent 5 days on which
 -- only the exact maximum goals per day occurred.
+
 select g.date
 from
 (
@@ -40,6 +42,7 @@ limit 5;
 
 -- If the author assumed incorrectly, here is a query returning
 -- quantity of goals sorted desc with the date sorted desc.
+
 select from_unixtime(g.timestamp, '%Y-%m-%d') `date`,
     coalesce(count(g.goal_id), 0) total_goals
 from goal g
@@ -49,6 +52,7 @@ limit 5;
 
 -- 3. Write a query to return the full name, id, career length, and team for all retired player. Ordered
 -- the results by team name alphabetically from a-z and player name alphabetically from z-a.
+
 select
     concat(p.first_name, ' ', p.last_name) as full_name,
     p.player_id,
@@ -57,11 +61,12 @@ select
 from
     player p
     join team t on t.team_id = p.FK_team_id
-    where p.retired_date < CURRENT_DATE
-    order by t.name, full_name desc;
+where p.retired_date < CURRENT_DATE
+order by t.name, full_name desc;
 
 -- 4. Write a query to return the full name, position, and total goals scored for all active players on all
 -- teams. Order the results by team, position, and then descending by total goals scored.
+
 select
     concat(p.first_name, ' ', p.last_name) as full_name,
     p.FK_position,
@@ -74,9 +79,10 @@ group by p.player_id
 order by t.name, p.FK_position, total_goals desc;
 
 -- 5. Write a query to determine which position has scored the most overall goals in the year 2015.
+
 select
     p.FK_position
- from player p
+from player p
     left join goal g on p.player_id = g.FK_player_id
 where timestamp between UNIX_TIMESTAMP('2015-01-01') and UNIX_TIMESTAMP('2015-12-31')
 group by FK_position
@@ -91,8 +97,8 @@ limit 1;
 
 select t.name, coalesce(count(g.goal_id), 0) as total_goals
 from team t
-join player p on p.FK_team_id = t.team_id
-left join goal g on g.FK_player_id = p.player_id
+    join player p on p.FK_team_id = t.team_id
+    left join goal g on g.FK_player_id = p.player_id
 group by p.FK_team_id
 order by total_goals desc
 limit 10;
@@ -106,9 +112,10 @@ limit 10;
 select
     concat(p.first_name, ' ', p.last_name) as full_name,
     coalesce(count(g.goal_id), 0) as total_goals
-from player p
-join team t on t.team_id = p.FK_team_id
-left join goal g on g.FK_player_id = p.player_id
+from
+    player p
+    join team t on t.team_id = p.FK_team_id
+    left join goal g on g.FK_player_id = p.player_id
 where p.retired_date < CURRENT_DATE
     and t.name = 'michigan minutemen'
     and p.FK_position='defense'
@@ -116,10 +123,11 @@ group by p.player_id
 order by total_goals desc, full_name;
 
 -- 8. Write a query to return the team that has the most goalie goals overall.
+
 select t.name
 from team t
-join player p on p.FK_team_id = t.team_id
-left goal g on g.FK_player_id = p.player_id
+    join player p on p.FK_team_id = t.team_id
+    left goal g on g.FK_player_id = p.player_id
 where p.FK_position='goalie'
 group by p.FK_team_id
 order by count(g.goal_id) desc
@@ -127,6 +135,7 @@ limit 1;
 
 -- 9. Build an index to efficiently return the full name and signed date for all players when searching
 -- by players last name.
+
 create index ln_fn_sd on player(last_name, first_name, signed_date);
 
 -- 10. Are there any suggestions you would make to make the schema more efficient?
@@ -150,4 +159,5 @@ create index ln_fn_sd on player(last_name, first_name, signed_date);
 -- The author cannot tell the difference between a/b in this context, and assumes this is only one question.
 -- The author also seems to recall that index strategy prefers "highest entropy first" on compound indexes.
 -- Finally, the author does not believe this Mallrat has ever actually played hockey, but he could be wrong :)
+
 create index ln_fn_sd_pos on player(last_name, first_name, signed_date, FK_position);
