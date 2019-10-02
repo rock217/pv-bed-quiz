@@ -1,7 +1,7 @@
 # Plum Voice Backend Web Application Developer Quiz
 
 ## The goods
-The answers for the **API Integration tests** section are located in [quiz_functions.php](./quiz_functions.php).
+The answers to the **API Integration tests** section are located in [quiz_functions.php](./quiz_functions.php).
 
 The answers to the **Database** section are located in [quiz_queries.sql](./quiz_queries.sql).
 
